@@ -2,13 +2,13 @@
 #
 # Get latest from https://github.com/github/gitignore/blob/master/Unity.gitignore
 #
-BehaviourMachineStateTool/[Ll]ibrary/
-BehaviourMachineStateTool/[Tt]emp/
-BehaviourMachineStateTool/[Oo]bj/
-BehaviourMachineStateTool/[Bb]uild/
-BehaviourMachineStateTool/[Bb]uilds/
-BehaviourMachineStateTool/[Ll]ogs/
-BehaviourMachineStateTool/[Mm]emoryCaptures/
+Behaviour-Machine-State-Tool/[Ll]ibrary/
+Behaviour-Machine-State-Tool/[Tt]emp/
+Behaviour-Machine-State-Tool/[Oo]bj/
+Behaviour-Machine-State-Tool/[Bb]uild/
+Behaviour-Machine-State-Tool/[Bb]uilds/
+Behaviour-Machine-State-Tool/[Ll]ogs/
+Behaviour-Machine-State-Tool/[Mm]emoryCaptures/
 
 # Never ignore Asset meta data
 !/[Aa]ssets/**/*.meta
