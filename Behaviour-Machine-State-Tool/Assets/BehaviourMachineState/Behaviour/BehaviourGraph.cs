@@ -38,8 +38,36 @@ namespace BehaviourMachineState
         }
 
         #region State Nodes
+
+        public bool isStateNodeDuplicate(StateNode node)
+        {
+            StateNode prevNode = null;
+            stateDict.TryGetValue(node.currentState, out prevNode);
+
+            if (prevNode != null)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         public void SetStateNode(StateNode node)
         {
+
+            if (node.isDuplicated)
+                return;
+
+            if (node.previousState != null)
+            {
+                stateDict.Remove(node.previousState);
+            }
+
+            if (node.currentState == null)
+            {
+                return;
+            }
+
             SavedStateNode savedNode = GetSavedState(node);
             
             if(savedNode == null)
@@ -52,6 +80,8 @@ namespace BehaviourMachineState
             savedNode.state = node.currentState;
             savedNode.position = new Vector2(node.windowRect.x, node.windowRect.y);
             savedNode.isCollapsed = node.collapse;
+
+            stateDict.Add(savedNode.state, node);
         }
 
         public void ClearStateNode(StateNode node)

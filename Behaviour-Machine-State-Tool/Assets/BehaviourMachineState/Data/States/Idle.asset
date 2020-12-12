@@ -14,9 +14,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   onState: []
   onEnter:
-  - {fileID: 0}
+  - {fileID: 11400000, guid: fcaa4524dfb34374e9d03187a212f6c6, type: 2}
   onExit: []
   transitions:
+  - condition: {fileID: 0}
+    targetState: {fileID: 0}
+    disable: 0
+  - condition: {fileID: 0}
+    targetState: {fileID: 0}
+    disable: 0
+  - condition: {fileID: 0}
+    targetState: {fileID: 0}
+    disable: 0
   - condition: {fileID: 0}
     targetState: {fileID: 0}
     disable: 0

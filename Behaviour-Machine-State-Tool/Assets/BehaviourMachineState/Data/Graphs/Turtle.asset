@@ -12,10 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 118decb581fa76a4e9b7fcc84b3e70bb, type: 3}
   m_Name: Turtle
   m_EditorClassIdentifier: 
-  savedStateNodes:
-  - state: {fileID: 0}
-    position: {x: 498, y: 132}
-    isCollapsed: 0
-  - state: {fileID: 0}
-    position: {x: 530, y: 220}
-    isCollapsed: 0
+  savedStateNodes: []

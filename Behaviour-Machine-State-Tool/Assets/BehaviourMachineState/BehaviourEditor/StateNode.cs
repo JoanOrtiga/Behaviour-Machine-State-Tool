@@ -14,7 +14,9 @@ namespace BehaviourMachineState.Editor
         public bool collapse;
         bool previousCollapse;
         public State currentState;
-        State previousState;
+        public bool isDuplicated;
+
+        public State previousState;
 
         SerializedObject serializedState;
 
@@ -49,21 +51,34 @@ namespace BehaviourMachineState.Editor
             if(previousCollapse != collapse)
             {
                 previousCollapse = collapse;
-                BehaviourEditor.currentGraph.SetStateNode(this);
+                //BehaviourEditor.currentGraph.SetStateNode(this);
             }
 
             if (previousState != currentState)
             {
                 serializedState = null;
 
-                previousState = currentState;
+                isDuplicated = BehaviourEditor.currentGraph.isStateNodeDuplicate(this);
 
-                BehaviourEditor.currentGraph.SetStateNode(this);
-
-                for (int i = 0; i < currentState.transitions.Count; i++)
+                if (!isDuplicated)
                 {
-                 
+                    BehaviourEditor.currentGraph.SetStateNode(this);
+                    previousState = currentState;
+
+
+                    for (int i = 0; i < currentState.transitions.Count; i++)
+                    {
+
+                    }
                 }
+            }
+
+            if (isDuplicated)
+            {
+
+                EditorGUILayout.LabelField("State is duplicated!");
+                windowRect.height = 100;
+                return;
             }
 
             if (currentState != null)

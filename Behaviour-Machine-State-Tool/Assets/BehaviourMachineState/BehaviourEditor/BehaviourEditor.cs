@@ -309,7 +309,7 @@ namespace BehaviourMachineState.Editor
 
             windows.Add(stateNode);
 
-            currentGraph.SetStateNode(stateNode);
+           // currentGraph.SetStateNode(stateNode);
 
             return stateNode;
         }
