@@ -249,8 +249,8 @@ namespace BehaviourMachineState.Editor
                     if (selectedNode is StateNode)
                     {
                         StateNode from = (StateNode)selectedNode;
-                        Transition transition = from.AddTransition();
-                        AddTransitionNode(from.currentState.transitions.Count, transition, from);
+                       // Transition transition = from.AddTransition();
+                        AddTransitionNode(from.currentState.transitions.Count, null, from);
                     }
 
                     break;
@@ -279,10 +279,10 @@ namespace BehaviourMachineState.Editor
                         TransitionNode target = (TransitionNode)selectedNode;
                         windows.Remove(target);
 
-                        if (target.enterState.currentState.transitions.Contains(target.targetTransition))
+                    /*    if (target.enterState.currentState.transitions.Contains(target.targetCondition))
                         {
-                            target.enterState.currentState.transitions.Remove(target.targetTransition);
-                        }
+                            target.enterState.currentState.transitions.Remove(target.targetCondition);
+                        }*/
                     }
 
                     if (selectedNode is CommentNode)
@@ -415,9 +415,25 @@ namespace BehaviourMachineState.Editor
                 stateNode.currentState = savedNodes[i].state;
 
                 stateNode.collapse = savedNodes[i].isCollapsed;
-                currentGraph.SetStateNode(stateNode);
 
-                //Load transitions;
+                for (int t = savedNodes[i].savedConditionNodes.Count -1; t >= 0  ; t--)
+                {
+                    TransitionNode transitionNode = AddTransitionNode(savedNodes[i].savedConditionNodes[t].position, savedNodes[i].savedConditionNodes[t].transition, stateNode);
+
+                    transitionNode.targetCondition = savedNodes[i].savedConditionNodes[t].condition;
+                }
+            }
+
+
+            List<SavedCommentNode> savedCommentNodes = new List<SavedCommentNode>();
+
+            savedCommentNodes.AddRange(currentGraph.savedCommentNodes);
+            currentGraph.savedCommentNodes.Clear();
+
+            for (int i = savedCommentNodes.Count - 1; i >= 0; i--)
+            {
+                CommentNode commentNode = AddCommentNode(savedCommentNodes[i].position);
+                commentNode.comment = savedCommentNodes[i].comment;
             }
         }
         #endregion

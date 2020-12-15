@@ -13,27 +13,33 @@ namespace BehaviourMachineState
         Dictionary<StateNode, SavedStateNode> stateNodesDict = new Dictionary<StateNode, SavedStateNode>();
         Dictionary<State, StateNode> stateDict = new Dictionary<State, StateNode>();
 
+        public List<SavedCommentNode> savedCommentNodes = new List<SavedCommentNode>();
+        Dictionary<CommentNode, SavedCommentNode> commentNodesDict = new Dictionary<CommentNode, SavedCommentNode>();
+
+
         public void Init()
         {
             stateNodesDict.Clear();
             stateDict.Clear();
+
+            commentNodesDict.Clear();
         }
 
         public void SetNode(BaseNode node)
         {
-            if(node is StateNode)
+            if (node is StateNode)
             {
-                SetStateNode((StateNode) node);
+                SetStateNode((StateNode)node);
             }
 
-            if(node is TransitionNode)
+            if (node is TransitionNode)
             {
-
+                SetTransitionNode((TransitionNode)node);
             }
 
-            if(node is CommentNode)
+            if (node is CommentNode)
             {
-
+                SetCommentNode((CommentNode)node);
             }
         }
 
@@ -52,7 +58,7 @@ namespace BehaviourMachineState
             return false;
         }
 
-        public void SetStateNode(StateNode node)
+        void SetStateNode(StateNode node)
         {
 
             if (node.isDuplicated)
@@ -69,8 +75,8 @@ namespace BehaviourMachineState
             }
 
             SavedStateNode savedNode = GetSavedState(node);
-            
-            if(savedNode == null)
+
+            if (savedNode == null)
             {
                 savedNode = new SavedStateNode();
                 savedStateNodes.Add(savedNode);
@@ -84,11 +90,11 @@ namespace BehaviourMachineState
             stateDict.Add(savedNode.state, node);
         }
 
-        public void ClearStateNode(StateNode node)
+        void ClearStateNode(StateNode node)
         {
             SavedStateNode savedNode = GetSavedState(node);
-            
-            if(savedNode != null)
+
+            if (savedNode != null)
             {
                 savedStateNodes.Remove(savedNode);
                 stateNodesDict.Remove(node);
@@ -102,11 +108,60 @@ namespace BehaviourMachineState
             return savedNode;
         }
 
-        public StateNode GetStateNode(State state)
+        StateNode GetStateNode(State state)
         {
             StateNode stateNode = null;
             stateDict.TryGetValue(state, out stateNode);
             return stateNode;
+        }
+
+        #endregion
+
+        #region Transition Nodes
+
+        public bool IsTransitionDuplicated(TransitionNode node)
+        {
+            SavedStateNode savedStateNode = GetSavedState(node.enterState);
+
+            return savedStateNode.IsTransitionDuplicated(node);
+        }
+
+        public void SetTransitionNode(TransitionNode node)
+        {
+            SavedStateNode savedStateNode = GetSavedState(node.enterState);
+            savedStateNode.SetTransitionNode(node);
+        }
+
+        public void ClearTransitionNode()
+        {
+
+        }
+
+
+        #endregion
+
+        #region Comment Nodes
+
+        void SetCommentNode(CommentNode node)
+        {
+            SavedCommentNode savedNode = GetSavedComment(node);
+
+            if (savedNode == null)
+            {
+                savedNode = new SavedCommentNode();
+                savedCommentNodes.Add(savedNode);
+                commentNodesDict.Add(node, savedNode);
+            }
+
+            savedNode.comment = node.comment;
+            savedNode.position = new Vector2(node.windowRect.x, node.windowRect.y);
+        }
+
+        SavedCommentNode GetSavedComment(CommentNode node)
+        {
+            SavedCommentNode savedNode = null;
+            commentNodesDict.TryGetValue(node, out savedNode);
+            return savedNode;
         }
 
         #endregion
@@ -118,11 +173,90 @@ namespace BehaviourMachineState
         public State state;
         public Vector2 position;
         public bool isCollapsed;
+
+        public List<SavedCondition> savedConditionNodes = new List<SavedCondition>();
+
+        Dictionary<TransitionNode, SavedCondition> transitionNodesDict = new Dictionary<TransitionNode, SavedCondition>();
+
+        Dictionary<Condition, TransitionNode> conditionDict = new Dictionary<Condition, TransitionNode>();
+
+        public void Init()
+        {
+            transitionNodesDict.Clear();
+            conditionDict.Clear();
+        }
+
+        public bool IsTransitionDuplicated(TransitionNode node)
+        {
+            TransitionNode prevNode = null;
+            conditionDict.TryGetValue(node.targetCondition, out prevNode);
+
+            if (prevNode != null)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public void SetTransitionNode(TransitionNode node)
+        {
+            if (node.isDuplicated)
+                return;
+
+            if(node.previousCondition != null)
+            {
+                conditionDict.Remove(node.targetCondition);
+            }
+
+            if (node.targetCondition == null)
+                return;
+
+            SavedCondition savedCondition = GetSavedCondition(node);
+            if(savedCondition == null)
+            {
+                savedCondition = new SavedCondition();
+                savedConditionNodes.Add(savedCondition);
+                transitionNodesDict.Add(node, savedCondition);
+                node.transition = node.enterState.currentState.AddTransition();
+            }
+
+            savedCondition.transition = node.transition;
+            savedCondition.condition = node.targetCondition;
+            savedCondition.transition.condition = savedCondition.condition;
+            savedCondition.position = new Vector2(node.windowRect.x, node.windowRect.y);
+            conditionDict.Add(savedCondition.condition, node);
+        }
+
+        SavedCondition GetSavedCondition(TransitionNode node)
+        {
+            SavedCondition savedNode = null;
+            transitionNodesDict.TryGetValue(node, out savedNode);
+            return savedNode;
+        }
+
+        TransitionNode GetTransitionNode(Transition transition)
+        {
+            TransitionNode stateNode = null;
+            conditionDict.TryGetValue(transition.condition, out stateNode);
+            return stateNode;
+        }
     }
 
-    public class SavedTransition
+    [System.Serializable]
+    public class SavedCondition
     {
-        
+        public Transition transition;
+        public Condition condition;
+        public Vector2 position;
     }
+
+    [System.Serializable]
+    public class SavedCommentNode
+    {
+        public string comment;
+        public Vector2 position;
+    }
+
 }
 

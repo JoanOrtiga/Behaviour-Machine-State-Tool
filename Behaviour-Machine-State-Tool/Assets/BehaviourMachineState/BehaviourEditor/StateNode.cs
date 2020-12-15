@@ -51,7 +51,6 @@ namespace BehaviourMachineState.Editor
             if(previousCollapse != collapse)
             {
                 previousCollapse = collapse;
-                //BehaviourEditor.currentGraph.SetStateNode(this);
             }
 
             if (previousState != currentState)
@@ -62,14 +61,8 @@ namespace BehaviourMachineState.Editor
 
                 if (!isDuplicated)
                 {
-                    BehaviourEditor.currentGraph.SetStateNode(this);
+                    BehaviourEditor.currentGraph.SetNode(this);
                     previousState = currentState;
-
-
-                    for (int i = 0; i < currentState.transitions.Count; i++)
-                    {
-
-                    }
                 }
             }
 

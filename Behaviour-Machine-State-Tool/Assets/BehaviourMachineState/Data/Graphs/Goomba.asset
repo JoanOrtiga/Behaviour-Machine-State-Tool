@@ -12,10 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 118decb581fa76a4e9b7fcc84b3e70bb, type: 3}
   m_Name: Goomba
   m_EditorClassIdentifier: 
-  savedStateNodes:
-  - state: {fileID: 11400000, guid: 258b13e1094ef0147841998e4a49f212, type: 2}
-    position: {x: 240, y: 133}
-    isCollapsed: 0
-  - state: {fileID: 11400000, guid: ba3b3bee9cd6dbc4f9f2f7abeed1db7d, type: 2}
-    position: {x: 483, y: 151}
-    isCollapsed: 0
+  savedStateNodes: []
+  savedCommentNodes: []

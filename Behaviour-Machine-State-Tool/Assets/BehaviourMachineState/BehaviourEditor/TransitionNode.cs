@@ -7,31 +7,53 @@ namespace BehaviourMachineState.Editor
 {
     public class TransitionNode : BaseNode
     {
-        public Transition targetTransition;
+        public bool isDuplicated;
+        public Condition targetCondition;
+        public Condition previousCondition;
+
+        public Transition transition;
+
         public StateNode enterState;
         public StateNode targetState;
+
 
         public void Init(StateNode enterState, Transition transition)
         {
             this.enterState = enterState;
-            targetTransition = transition;
         }
 
         public override void DrawWindow()
         {
-            if (targetTransition == null)
-                return;
-
             EditorGUILayout.LabelField("");
-            targetTransition.condition = (Condition)EditorGUILayout.ObjectField(targetTransition.condition, typeof(Condition), false);
+            targetCondition = (Condition)EditorGUILayout.ObjectField(targetCondition, typeof(Condition), false);
 
-            if(targetTransition.condition == null)
+            if (targetCondition == null)
             {
                 EditorGUILayout.LabelField("No Condition!");
             }
             else
             {
-                targetTransition.disable = EditorGUILayout.Toggle("Disable", targetTransition.disable);
+                if (isDuplicated)
+                {
+                    EditorGUILayout.LabelField("Duplicated condition");
+                }
+                else
+                {
+             /*       if (transition != null)
+                        transition.disable = EditorGUILayout.Toggle("Disable", transition.disable);*/
+                }
+            }
+
+            if (previousCondition != targetCondition)
+            {
+                isDuplicated = BehaviourEditor.currentGraph.IsTransitionDuplicated(this);
+                if (!isDuplicated)
+                {
+                    BehaviourEditor.currentGraph.SetNode(this);
+
+                }
+
+                previousCondition = targetCondition;
             }
         }
 
